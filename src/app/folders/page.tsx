@@ -2,9 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
+
+interface Folder {
+  id: string; // UUID
+  name: string;
+  created_at: string;
+}
 
 export default function Folders() {
-  const [folders, setFolders] = useState<any[]>([])
+  const [folders, setFolders] = useState<Folder[]>([])
   const [newFolderName, setNewFolderName] = useState('')
 
   useEffect(() => {
@@ -25,7 +32,7 @@ export default function Folders() {
     e.preventDefault()
     if (!newFolderName.trim()) return
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('folders')
       .insert([{ name: newFolderName.trim() }])
       .select()
@@ -55,9 +62,9 @@ export default function Folders() {
       <ul>
         {folders.map((folder) => (
           <li key={folder.id} className="mb-2">
-            <a href={`/folders/${folder.id}`} className="text-blue-500 hover:underline">
+            <Link href={`/folders/${folder.id}`} className="text-blue-500 hover:underline">
               {folder.name}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
